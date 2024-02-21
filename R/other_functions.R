@@ -29,6 +29,9 @@ new_basis_list <- function(pred_vars_,
                       train_observations_index,
                       data, pen_basis = TRUE){
 
+  if(!(master_var_ %in% 1:(length(data$dummy_x$continuousVars)))){
+    stop("error master_var isnt a main effect")
+  }
   # New x_min and x_max
   x_subset <- data$x_train[train_observations_index,,drop = FALSE]
   xmin <- min(x_subset)
@@ -42,7 +45,7 @@ new_basis_list <- function(pred_vars_,
   B_train_list <- vector("list",length(pred_vars_))
 
   # Firstly need to retrieve the main effects and interactions for each case
-  interactions_vector <- pred_vars_[which(pred_vars_ > length(data$dummy_x$continuousVars))]-length(dummy_x$continuousVars)
+  interactions_vector <- pred_vars_[which(pred_vars_ > length(data$dummy_x$continuousVars))]-length(data$dummy_x$continuousVars)
 
   # Getting the other basis index]
   index_interaction <- unique(sort(unlist(data$interaction_list[,interactions_vector])))
@@ -59,7 +62,7 @@ new_basis_list <- function(pred_vars_,
     new_B_aux <- DALSM::centeredBasis.gen(x = x_subset[,ii],knots = new_knots_aux$knots,pen.order = data$dif_order)
 
     if(pen_basis){
-      B_train_main[[ii]] <- new_B_aux$B%*%Diff_term
+      B_train_main[[ii]] <- new_B_aux$B%*%data$Diff_term
     } else {
       B_train_main[[ii]] <- new_B_aux$B
     }
@@ -110,7 +113,7 @@ new_basis_list_test <- function(pred_vars_,
   B_test_list <- vector("list",length(pred_vars_))
 
   # Firstly need to retrieve the main effects and interactions for each case
-  interactions_vector <- pred_vars_[which(pred_vars_ > length(data$dummy_x$continuousVars))]-length(dummy_x$continuousVars)
+  interactions_vector <- pred_vars_[which(pred_vars_ > length(data$dummy_x$continuousVars))]-length(data$dummy_x$continuousVars)
 
   # Getting the other basis index]
   index_interaction <- unique(sort(unlist(data$interaction_list[,interactions_vector])))
@@ -127,7 +130,7 @@ new_basis_list_test <- function(pred_vars_,
     new_B_aux <- DALSM::centeredBasis.gen(x = x_test_subset[,ii],knots = new_knots_aux$knots,pen.order = data$dif_order)
 
     if(pen_basis){
-      B_test_main[[ii]] <- new_B_aux$B%*%Diff_term
+      B_test_main[[ii]] <- new_B_aux$B%*%data$Diff_term
     } else {
       B_test_main[[ii]] <- new_B_aux$B
     }

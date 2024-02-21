@@ -344,35 +344,35 @@ grow <- function(tree,
                                  data = data, pen_basis = TRUE)
 
 
-  # Visualzing the main effects
-  if(plot_preview){
-      par(mfrow = c(3,1))
-      visu_basis <- 1
-      # Visualizing some basis functions
-      plot(x  = 0, xlim = c(0,1), ylim = c(-1,1),
-           type= 'n', ylab= paste0("B.",visu_basis), main = paste0("Node B(",visu_basis,")"))
-      for(basis_col in 1:NCOL(B_list[[1]])){
-        points(x_train[,g_node$master_var],B_list[[1]][,basis_col],
-               col = basis_col, pch = 20, xlab = paste0("x.",visu_basis))
-      }
-
-      # Visualizing some basis functions
-      plot(x  = 0, xlim = c(0,1), ylim = c(-1,1),
-           type= 'n', ylab= paste0("B.",visu_basis), main = paste0("Left  B(",visu_basis,")"))
-      for(basis_col in 1:NCOL(B_master)){
-        points(x_train[left_index,g_node$master_var],B_list_left[[1]][,basis_col],
-               col = basis_col, pch = 20, xlab = paste0("x.",visu_basis))
-      }
-
-      # Visualizing some basis functions
-      plot(x  = 0, xlim = c(0,1), ylim = c(-1,1),
-           type= 'n', ylab= paste0("B.",visu_basis), main = paste0("Right B(",visu_basis,")"))
-      for(basis_col in 1:NCOL(B_master)){
-        points(x_train[right_index,g_node$master_var],B_list_right[[1]][,basis_col],
-               col = basis_col, pch = 20, xlab = paste0("x.",visu_basis))
-      }
-
-  }
+  # # Visualzing the main effects
+  # if(plot_preview){
+  #     par(mfrow = c(3,1))
+  #     visu_basis <- 1
+  #     # Visualizing some basis functions
+  #     plot(x  = 0, xlim = c(0,1), ylim = c(-1,1),
+  #          type= 'n', ylab= paste0("B.",visu_basis), main = paste0("Node B(",visu_basis,")"))
+  #     for(basis_col in 1:NCOL(B_list[[1]])){
+  #       points(x_train[,g_node$master_var],B_list[[1]][,basis_col],
+  #              col = basis_col, pch = 20, xlab = paste0("x.",visu_basis))
+  #     }
+  #
+  #     # Visualizing some basis functions
+  #     plot(x  = 0, xlim = c(0,1), ylim = c(-1,1),
+  #          type= 'n', ylab= paste0("B.",visu_basis), main = paste0("Left  B(",visu_basis,")"))
+  #     for(basis_col in 1:NCOL(B_master)){
+  #       points(x_train[left_index,g_node$master_var],B_list_left[[1]][,basis_col],
+  #              col = basis_col, pch = 20, xlab = paste0("x.",visu_basis))
+  #     }
+  #
+  #     # Visualizing some basis functions
+  #     plot(x  = 0, xlim = c(0,1), ylim = c(-1,1),
+  #          type= 'n', ylab= paste0("B.",visu_basis), main = paste0("Right B(",visu_basis,")"))
+  #     for(basis_col in 1:NCOL(B_master)){
+  #       points(x_train[right_index,g_node$master_var],B_list_right[[1]][,basis_col],
+  #              col = basis_col, pch = 20, xlab = paste0("x.",visu_basis))
+  #     }
+  #
+  # }
 
 
   g_loglike <- nodeLogLike(curr_part_res = curr_part_res,
@@ -1054,11 +1054,17 @@ change_stump <- function(tree,
                            train_observations_index = c_node$train_index,
                            data = data,pen_basis = TRUE)
 
-  B_new <- new_basis_list(pred_vars_ = new_node_index,
-                          master_var_ = c_node$master_var,
-                          train_observations_index = c_node$train_index,
-                          data = data,pen_basis = TRUE)
-
+  if(change_type == 'master'){
+    B_new <- new_basis_list(pred_vars_ = new_node_index,
+                            master_var_ = new_node_index[1],
+                            train_observations_index = c_node$train_index,
+                            data = data,pen_basis = TRUE)
+  } else {
+    B_new <- new_basis_list(pred_vars_ = new_node_index,
+                            master_var_ = c_node$master_var,
+                            train_observations_index = c_node$train_index,
+                            data = data,pen_basis = TRUE)
+  }
   # Calculating loglikelihood for the new changed nodes and the old ones
   c_loglike <- nodeLogLike(curr_part_res = curr_part_res,
                            node_basis_list = B_list,

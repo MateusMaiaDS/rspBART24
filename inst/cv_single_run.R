@@ -11,7 +11,7 @@ devtools::load_all()
 
 # Simulation arguments
 set.seed(42)
-n_ <- 250
+n_ <- 500
 sd_ <- 1
 n_rep_ <- 10
 
@@ -20,8 +20,8 @@ n_rep_ <- 10
 # (1): "oned_break" one dimensionnal sin(2*x) with a break
 # (2): "friedman_nointer_nonoise": four-dimensional friedmna setting with no interaction terms and no extra X noise variables
 # (3): "interaction
-# type_ <- c("friedman_break")
-type_ <- c("friedman")
+type_ <- c("friedman_break")
+# type_ <- c("friedman")
 # type_ <- "smooth.main.formula"
 # type_ <- "non.smooth.main.formula"
 # type_ <- "non.and.smooth.main.formula"
@@ -113,14 +113,14 @@ y_train <- selected_train$y
 y_test <- selected_test$y
 n_tree <- 10
 node_min_size <- 25
-n_mcmc <- 10000
-n_burn <- 5000
+n_mcmc <- 5000
+n_burn <- 3000
 alpha <- 0.5
 beta <- 2
-df <- 2
+df <- 3
 sigquant <- 0.9
 kappa <- 2
-nIknots <- 10
+nIknots <- 20
 dif_order <- 2
 tau <- 1
 scale_bool <- TRUE
@@ -177,7 +177,6 @@ rsp_mod <- rspBART(x_train = x_train,
                    interaction_term = interaction_term,
                    interaction_list = interaction_list,
                    store_tree_fit = store_tree_fit,
-                   mle_prior = mle_prior,
                    linero_sampler = linero_sampler,
                    use_D_bool = use_D_bool,
                    varimportance_bool = varimportance_bool,
@@ -189,7 +188,7 @@ rsp_mod <- rspBART(x_train = x_train,
 
 
 
-saveRDS(object = rsp_mod,file = paste0("/users/research/mmarques/spline_bart_lab/preliminar_results/rspBART24/",type_,"/single_run/v27_single_run_rep_",
+saveRDS(object = rsp_mod,file = paste0("/users/research/mmarques/spline_bart_lab/preliminar_results/rspBART24/",type_,"/single_run/v28_single_run_rep_",
                                        selected_rep_,"_n_",n_,
                                       "_sd_",sd_,"_nIknots_",nIknots,"_ntree_",n_tree,"_nodesize_",node_min_size,
                                       "_dif_",dif_order,"_scale_",scale_bool,"_sc_basis_",scale_basis_function,
